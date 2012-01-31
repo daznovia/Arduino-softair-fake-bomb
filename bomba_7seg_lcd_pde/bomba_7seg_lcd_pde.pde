@@ -14,7 +14,8 @@ long previousMillis = 0;
 long interval = 10;   
 int stato=0;
 int prova=0;
-int chiave= 0;
+int LedVerde = 11;
+int LedRosso= 10;
 
 
 void setup() {
@@ -23,8 +24,8 @@ Serial.begin(9600);
 Serial.print("v");
 
 //inizializzo il pin di stato
-pinMode(13,OUTPUT);
-pinMode(10,OUTPUT);
+pinMode(LedVerde,OUTPUT);
+pinMode(LedRosso,OUTPUT);
 
 
 //inizializzo l'lcd e stampo un messaggio di benvenuto
@@ -39,22 +40,17 @@ lcd.setCursor(0,1);
 lcd.print("Codice: ");
 
 
-
-
-chiave = digitalRead(12);
 }
 
 
 
 void loop() {
   
-
-  
   
 if(prova==4)
 disarmaBomba();
 
-if (lcd.button()==KEYPAD_UP && 1) {
+if (lcd.button()==KEYPAD_UP && stato==0) {
   armaBomba(); 
 //waitReleaseButton();
     }
@@ -73,7 +69,7 @@ if (lcd.button()== KEYPAD_SELECT) {
 
 if(stato!=DISARMED && timer==1)
   esplosioneBomba();
-  //timer=9999;
+
 
 
 
@@ -90,14 +86,14 @@ contatore();
 void armaBomba() {
      stato=ARMED;
      previousMillis = millis();
- digitalWrite(10, HIGH);
- digitalWrite(13, LOW);
+ digitalWrite(LedRosso, HIGH);
+ digitalWrite(LedVerde, LOW);
    }
    
  void disarmaBomba() {
    stato=DISARMED;
-   digitalWrite(10, LOW);
-    digitalWrite(13, HIGH);
+   digitalWrite(LedRosso, LOW);
+    digitalWrite(LedVerde, HIGH);
  }
    
    
@@ -130,11 +126,11 @@ lcd.clear();
 lcd.setCursor(0,0);
 lcd.print("     BOOM!!!");
 for(i=0;i<25;i++){
-   digitalWrite(10, LOW);
-   digitalWrite(13, HIGH);
+   digitalWrite(LedRosso, LOW);
+   digitalWrite(LedVerde, HIGH);
    delay(100);
-   digitalWrite(13, LOW);
-   digitalWrite(10, HIGH);
+   digitalWrite(LedVerde, LOW);
+   digitalWrite(LedRosso, HIGH);
   delay(100);
 }
 }
