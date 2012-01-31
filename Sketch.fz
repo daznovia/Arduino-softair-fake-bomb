@@ -264,7 +264,7 @@
         <instance moduleIdRef="NoteModuleID" modelIndex="7043" path=":/resources/parts/core/note.fzp">
             <views>
                 <breadboardView layer="breadboardNote">
-                    <geometry z="5.5" x="-278.733" y="-12.5889" width="140" height="45"/>
+                    <geometry z="5.5" x="-292.067" y="-6.36667" width="140" height="45"/>
                 </breadboardView>
             </views>
         </instance>
