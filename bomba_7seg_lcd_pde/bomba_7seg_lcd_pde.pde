@@ -27,11 +27,14 @@ delay(2000);
 void loop() {
   
 
-   if (lcd.button()==KEYPAD_UP)
-    {
-     stato=ARMED;
-     previousMillis = millis();
+if (lcd.button()==KEYPAD_UP) {
+  armaBomba();
     }
+    
+if (lcd.button()== KEYPAD_SELECT) {
+  disarmaBomba();
+    }
+
 
 if(stato!=DISARMED && timer==0)
   timer=9999;
@@ -44,8 +47,16 @@ contatore();
 
 }
 
-
-
+void armaBomba() {
+     stato=ARMED;
+     previousMillis = millis();
+   }
+   
+ void disarmaBomba() {
+   stato=DISARMED;
+ }
+   
+   
 void contatore(){
   
 unsigned long currentMillis = millis();
@@ -55,30 +66,8 @@ if(currentMillis - previousMillis > interval) {
   
 sprintf(buf, "%04d", timer);
 Serial.print(buf);
-if(timer>0) timer--;
+if(timer>0 && stato==ARMED) timer--;
   }
   
-}
-
-int waitButton()
-{
-  int buttonPressed; 
-  waitReleaseButton();
-  lcd.blink();
-  while((buttonPressed=lcd.button())==KEYPAD_NONE)
-  {
-  }
-  //delay(50);  
-  lcd.noBlink();
-  return buttonPressed;
-}
-
-void waitReleaseButton()
-{
-  //delay(50);
-  while(lcd.button()!=KEYPAD_NONE)
-  {
-  }
- // delay(50);
 }
 
