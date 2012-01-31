@@ -8,11 +8,11 @@ LCDKeypad lcd;
 #define DISARMED 2 
 #define DETONATED 3
 
-int timer = 299;
+int timer = 9999;
 char buf[12];
 long previousMillis = 0; 
 long interval = 10;   
-int stato=ARMED;
+int stato=0;
 
 
 
@@ -22,8 +22,16 @@ Serial.begin(9600);
 Serial.print("v");
 delay(2000);
 
+
 }
 void loop() {
+  
+
+   if (lcd.button()==KEYPAD_UP)
+    {
+     stato=ARMED;
+     previousMillis = millis();
+    }
 
 if(stato!=DISARMED && timer==0)
   timer=9999;
@@ -33,11 +41,13 @@ if(stato==ARMED){
 contatore();
 }
 
+
 }
 
 
 
 void contatore(){
+  
 unsigned long currentMillis = millis();
 
 if(currentMillis - previousMillis > interval) {
@@ -49,3 +59,26 @@ if(timer>0) timer--;
   }
   
 }
+
+int waitButton()
+{
+  int buttonPressed; 
+  waitReleaseButton();
+  lcd.blink();
+  while((buttonPressed=lcd.button())==KEYPAD_NONE)
+  {
+  }
+  //delay(50);  
+  lcd.noBlink();
+  return buttonPressed;
+}
+
+void waitReleaseButton()
+{
+  //delay(50);
+  while(lcd.button()!=KEYPAD_NONE)
+  {
+  }
+ // delay(50);
+}
+
