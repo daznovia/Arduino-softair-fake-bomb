@@ -8,14 +8,18 @@ LCDKeypad lcd;
 #define DISARMED 2 
 #define DETONATED 3
 
-int timer = 1199;
+int timer = 99;   // questo è il timer in decimi di secondo
 char buf[12];
 long previousMillis = 0; 
-long interval = 10;   
+
+long buzzpreMillis = 0; 
+
+long interval = 100;   
 int stato=0;
 int prova=0;
 int LedVerde = 11;
 int LedRosso= 10;
+int buzzPin=19;
 
 
 void setup() {
@@ -35,11 +39,7 @@ lcd.print("NOCS CLUB");
 delay(2000);
 lcd.clear();
 lcd.setCursor(0,0);
-lcd.print("Immetti il");
-lcd.setCursor(0,1);
-lcd.print("Codice: ");
-
-
+lcd.print("Avvia il Timer:");
 }
 
 
@@ -52,6 +52,11 @@ disarmaBomba();
 
 if (lcd.button()==KEYPAD_UP && stato==0) {
   armaBomba(); 
+lcd.clear();
+lcd.setCursor(0,0);
+lcd.print("Immetti il");
+lcd.setCursor(0,1);
+lcd.print("Codice: ");
 //waitReleaseButton();
     }
     
@@ -67,17 +72,15 @@ if (lcd.button()== KEYPAD_SELECT) {
     }
 
 
-if(stato!=DISARMED && timer==1)
+if(stato!=DISARMED && timer<0){
   esplosioneBomba();
-
-
-
-
+  stato=DISARMED;
+}
 
 
 if(stato==ARMED){
 contatore();
-
+buzz();
 }
 
 
@@ -101,15 +104,22 @@ void contatore(){
   
 unsigned long currentMillis = millis();
 
+
 if(currentMillis - previousMillis > interval) {
     previousMillis = currentMillis;   
   
 sprintf(buf, "%04d", timer);
 Serial.print(buf);
-if(timer>0 && stato==ARMED) timer--;
+if(timer>=0 && stato==ARMED){
+  timer--; 
+}
   }
   
 }
+
+
+
+
 
 void waitReleaseButton()
 {
@@ -122,15 +132,36 @@ void waitReleaseButton()
 
 void esplosioneBomba(){
 int i;
+timer=0;
 lcd.clear();
 lcd.setCursor(0,0);
 lcd.print("     BOOM!!!");
-for(i=0;i<25;i++){
+for(i=0;i<30;i++){
+  
    digitalWrite(LedRosso, LOW);
    digitalWrite(LedVerde, HIGH);
+   tone(buzzPin, 4000, 100);
    delay(100);
    digitalWrite(LedVerde, LOW);
    digitalWrite(LedRosso, HIGH);
+   tone(buzzPin, 3000, 100);
   delay(100);
 }
+}
+
+
+
+void buzz(){
+  
+unsigned long currentMillis = millis();
+
+
+if(currentMillis - buzzpreMillis > 1010) {
+    buzzpreMillis = currentMillis;   
+
+if(timer>0 && stato==ARMED){
+  tone(buzzPin, 4000, 200);
+}
+  }
+  
 }
