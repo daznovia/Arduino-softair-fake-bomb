@@ -1,5 +1,7 @@
 #include <LiquidCrystal.h>
 #include <LCDKeypad.h>
+#include <Keypad.h>
+
 LCDKeypad lcd;
 
 //Define all the bomb states  
@@ -8,19 +10,41 @@ LCDKeypad lcd;
 #define DISARMED 2 
 #define DETONATED 3
 
-int timer = 99;   // questo è il timer in decimi di secondo
+
+// definisco la matrice per la keypad
+const byte ROWS = 4; //four rows
+const byte COLS = 3; //three columns
+char keys[ROWS][COLS] = {
+  {'1','2','3'},
+  {'4','5','6'},
+  {'7','8','9'},
+  {'#','0','*'}
+};
+byte rowPins[ROWS] = {12, 11, 3, 10}; //connect to the row pinouts of the keypad
+byte colPins[COLS] = {17, 18, 19}; //connect to the column pinouts of the keypad
+
+Keypad keypad = Keypad( makeKeymap(keys), rowPins, colPins, ROWS, COLS );
+///////////////////////////////
+
+
+char codice[4]={1,2,3,4};
+char inserito[4]={0,0,0,0};
+int timer = 990;   // questo è il timer in decimi di secondo
+
+
 char buf[12];
 long previousMillis = 0; 
 
 long buzzpreMillis = 0; 
 
-long interval = 100;   
+long interval = 10;   
 int stato=0;
 int prova=0;
-int LedVerde = 11;
-int LedRosso= 10;
-int buzzPin=19;
-
+int LedVerde = 16;
+int LedRosso= 2;
+int buzzPin=13;
+int k=0;
+int j=0;
 
 void setup() {
 //inizializzo la seriale e pulisco il display a 7 segmenti
@@ -45,6 +69,16 @@ lcd.print("Avvia il Timer:");
 
 
 void loop() {
+  
+  
+ char key = keypad.getKey();
+ 
+
+    if (k<4 && key != NO_KEY){
+    lcd.print(key);
+    inserito[k]=key;
+    k++;
+  }
   
   
 if(prova==4)
@@ -97,6 +131,10 @@ void armaBomba() {
    stato=DISARMED;
    digitalWrite(LedRosso, LOW);
     digitalWrite(LedVerde, HIGH);
+   delay(1000);
+   lcd.clear();
+   for(k=0;k<4;k++)
+     lcd.print(inserito[k]);
  }
    
    
@@ -165,3 +203,9 @@ if(timer>0 && stato==ARMED){
   }
   
 }
+
+
+
+void controllaCodice(){
+  int i;
+  fo
