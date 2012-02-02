@@ -29,7 +29,7 @@ Keypad keypad = Keypad( makeKeymap(keys), rowPins, colPins, ROWS, COLS );
 
 char codice[4]={1,2,3,4};
 char inserito[4]={0,0,0,0};
-int timer = 990;   // questo è il timer in decimi di secondo
+int timer = 990;   // questo Ã¨ il timer in decimi di secondo
 
 
 char buf[12];
@@ -79,7 +79,6 @@ void loop() {
     inserito[k]=key;
     k++;
   }
-  
   
   
 if(prova==4)
@@ -206,7 +205,3 @@ if(timer>0 && stato==ARMED){
 }
 
 
-
-void controllaCodice(){
-  int i;
-  fo
